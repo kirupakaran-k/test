@@ -1,84 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    /* Apply modern and minimalist font to chart elements */
-    #chart_div {
-      font-family: 'Roboto', sans-serif;
-      max-width: 100%; /* Restrict the width to the width of the screen */
-    }
-
-    /* Style for the first heading (h1) */
-    h1 {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: bold;
-      text-decoration: underline;
-      font-size: 2.0em; /* Adjust the font size as needed */
-    }
-
-    /* Style for the second heading (h2) */
-    h2 {
-      font-family: 'Arial', sans-serif; /* Different font for h2 */
-      font-weight: bold;
-      font-size: 1.6em; /* Adjust the font size as needed */
-    }
-
-    /* Style for the highlighted word in h2 */
-    .highlight {
-      text-decoration: underline;
-    }
-
-    /* Style for the definition */
-    .definition {
-      font-size: 50%; /* Adjust the font size as needed */
-      margin-left: 0.4em; /* Adjust the spacing as needed */
-      font-weight: normal;
-    }
-  </style>
-  <!-- Include Google Charts -->
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  <script type="text/javascript">
-    google.charts.load('current', {packages:["orgchart"]});
-    google.charts.setOnLoadCallback(drawChart);
-
-    function drawChart() {
-      var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1KKewbyGqj5M0NTCJ1TRtSv8zwXdfTHeIgU8FIAdw_7M/gviz/tq?sheet=Coimbatore&range=A2:D');
-      query.send(handleQueryResponse);
-    }
-
-    function handleQueryResponse(response) {
-      if (response.isError()) {
-        console.error('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-        return;
-      }
-
-      var data = response.getDataTable();
-
-      // Draw the organization chart with horizontal orientation
-      var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
-
-      google.visualization.events.addListener(chart, 'onmouseover', function(e) {
-        var tooltip = data.getValue(e.row, 2); // Assuming ToolTip is in column C
-
-        if (tooltip) {
-          alert(tooltip);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizational Chart</title>
+    <!-- Include necessary libraries -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-org-chart@3.1.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
+    <style>
+        /* Add any custom styles here */
+        .chart-container {
+            /* Specify container styles if needed */
         }
-      });
-
-      chart.draw(data, {allowHtml:true});
-    }
-  </script>
+    </style>
 </head>
 <body>
-  <!-- First heading for the organization chart -->
-  <h1>TAMILNADU WATER RESOURCES DEPARTMENT</h1>
+    <!-- Heading -->
+    <h1 style="text-align: center; font-size:30px; margin-left: 40px; margin-right: 40px;">TAMILNADU WATER RESOURCES DEPARTMENT</h1>
+    <hr style="border-top: 1px solid #E4E2E9; margin-left: 40px; margin-right: 40px;">
+    <p style="text-align: center;margin-left: 40px; margin-right: 40px;"><b><u><span style="font-style: underline; font-size:20px;">ORGANOGRAM</span></b></u><span style="font-size: 12px;">    [Definition: A visual representation of an organization's structure, illustrating hierarchy and relationships.]</span></p>
+    <hr style="border-top: 1px solid #E4E2E9; margin-left: 40px; margin-right: 40px;">
+    <h2 style="text-align: center; font-size:20px; margin-left: 40px; margin-right: 40px;">COIMBATORE REGION</h2>
 
-  <!-- Second heading for the organization chart -->
-  <h2><span class="highlight">ORGANOGRAM</span><span class="definition"> [Definition: A visual representation of an organization's structure, illustrating hierarchy and relationships.]</span></h2>
+	<div class="chart-container"></div>
 
-  <!-- Container for the organization chart -->
-  <div id="chart_div"></div>
+    <script>
+        var chart = null;
+
+        // Fetch CSV data and render chart
+        d3.csv(
+            'https://docs.google.com/spreadsheets/d/e/2PACX-1vSdRqAAC6DtZrVXHHxHA0VH6CUT8xszgO8kkE1IZuZx18SN2-oyNBADM4C2iWkDjIeHDcBHrPQoNExU/pub?gid=412639955&single=true&output=csv'
+        ).then((data) => {
+            chart = new d3.OrgChart()
+                .nodeHeight((d) => {
+                    // Calculate the total number of lines for Officer, Office_name, and Location
+                    const linesOccupied = d.data.Officer.length + d.data.Office_name.length + d.data.Location.length;
+                    // Set a base height and adjust based on the number of lines
+                    const baseHeight = 30; // Base height for the node
+                    const lineHeight = 1.15; // Height of each line
+                    return baseHeight + linesOccupied * lineHeight;
+                }) // Adjust node height dynamically based on 'Height' property
+                .nodeWidth((d) => 200)
+                .childrenMargin((d) => 60)
+                .layout('left')
+                .compact(false)
+                .nodeContent(function (d, i, arr, state) {
+                    const color = '#FFFFFF';
+                    return `
+                        <div style='width:${d.width}px;height:${d.height}px;padding-top:1px;padding-left:1px;padding-right:1px'>
+                            <div style="font-family: 'Inter', sans-serif;background-color:${color};  margin-left:-1px;width:${d.width}px;height:${d.height}px;border-radius:4px;border: 2px solid #E4E2E9">
+                                <div style="font-size:15px;color:#08011E;margin-left:20px;margin-right:10px;margin-top:10px"> ${d.data.Officer} </div>
+                                <hr style="border-top: 1px solid #E4E2E9; margin-left: 14px; margin-right: 14px;">
+                                <div style="color:#716E7B;margin-left:20px;margin-right:10px;font-size:12px;"> ${d.data.Office_name}, </div>
+                                <div style="color:#716E7B;margin-left:20px;margin-right:10px;margin-top:3px;font-size:12px;"> ${d.data.Location}. </div>
+                            </div>
+                        </div>
+                    `;
+                })
+                .container('.chart-container')
+                .data(data)
+                .render();
+        });
+    </script>
 </body>
 </html>
