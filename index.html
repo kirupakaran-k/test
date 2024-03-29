@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organizational Chart</title>
+    <title>TNWRD - Org.Chart</title>
     <!-- Include necessary libraries -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-org-chart@3.1.0"></script>
@@ -14,7 +14,7 @@
    			overflow: hidden ;
         }
         .chart-container {margin: 1vw;}
-		.link {stroke: #666699; stroke-width: 2px;}
+		.link {stroke-width: 4px;}
         h1, h2, hr, p {text-align: center; margin-left: 2vw; margin-right: 2vw;}	
     </style>
 </head>
@@ -25,15 +25,49 @@
     <p style= "font-size: clamp(14px, 2.6vw, 20px);"><b>ORGANOGRAM</b><span style="font-size: clamp(12px, 1.4vw, 14px);"><i> [Definition: A visual representation of an organization's structure, illustrating hierarchy and relationships.]</i></span></p>
     <hr style="border: 1px solid #a3a3c2; margin-top: -2vh; margin-bottom: -1vh;">
     <h2 style= "font-size: clamp(16px, 3vw, 24px);">COIMBATORE REGION</h2>
-
+    
+    <input type="search" id="searchInput" list="suggestions" placeholder="search by Office Name"/>
+    <datalist id="suggestions"></datalist>
+    <button onclick="filterChart()">Search</button>
+    
     <div class="chart-container"></div>
 
     <script>
-        var chart = null;
+        let chart;
+
+        function filterChart() {
+            // Get input value
+            const officeName = document.getElementById('searchInput').value.trim().toLowerCase();
+
+            // Find the node ID corresponding to the entered office name
+            const nodeId = findNodeIdByOfficeName(officeName);
+
+            if (nodeId) {
+                // Clear previous highlighting
+                chart.clearHighlighting().collapseAll();
+
+                // Highlight the node
+                chart.setUpToTheRootHighlighted(nodeId).render().fit();
+            } else {
+                alert('Office Name not found!');
+            }
+        }
+
+        function findNodeIdByOfficeName(officeName) {
+            const data = chart.data();
+            for (const node of data) {
+                if (node.data.Office_name.toLowerCase() === officeName) {
+                    return node.data.id;
+                }
+            }
+            return null;
+        }
 
         // Function to expand and center the node
         function expandNode(nodeId) {
-            chart.setExpanded(nodeId).setCentered(nodeId).render();}
+            chart.setExpanded(nodeId).setCentered(nodeId).render();
+        }
+
         d3.csv(
             'https://docs.google.com/spreadsheets/d/e/2PACX-1vSdRqAAC6DtZrVXHHxHA0VH6CUT8xszgO8kkE1IZuZx18SN2-oyNBADM4C2iWkDjIeHDcBHrPQoNExU/pub?gid=412639955&single=true&output=csv'
         ).then((data) => {
@@ -41,9 +75,10 @@
                 .nodeHeight((d) => 110)
                 .nodeWidth((d) => {
                     const linesOccupied = d.data.Officer.length + d.data.Office_name.length + d.data.Location.length;
-                    const baseHeight = 90; 
+                    const baseHeight = 100; 
                     const lineHeight = 2.4; 
-                    return baseHeight + linesOccupied * lineHeight;})
+                    return baseHeight + linesOccupied * lineHeight;
+                })
                 .childrenMargin((d) => 60)
                 .layout('left')
                 .compact(false)
@@ -54,22 +89,22 @@
                             color = '#47a6ff'; 
                             break;
                         case '2':
-                            color = '#69b9ff'; // Change color based on the 'rank' value
+                            color = '#69b9ff';
                             break;
                         case '3':
-                            color = '#88c8ff'; // Change color based on the 'rank' value
+                            color = '#88c8ff';
                             break;
                         case '4':
-                            color = '#9cd4ff'; // Change color based on the 'rank' value
+                            color = '#9cd4ff';
                             break;
                         case '5':
-                            color = '#b5e1ff'; // Change color based on the 'rank' value
+                            color = '#b5e1ff';
                             break;
                         case '6':
-                            color = '#dff0ff'; // Change color based on the 'rank' value
+                            color = '#dff0ff';
                             break;
                         default:
-                            color = '#008080'; // Default color
+                            color = '#008080';
                     }
                     return `
                         <div style='width:${d.width}px;height:${d.height}px;padding-top:1px;padding-left:1px;padding-right:1px'>
@@ -84,7 +119,22 @@
                 })
                 .container('.chart-container')
                 .data(data)
+                .onNodeClick((d) => {
+                    // Clear previous highlighting
+                    chart.clearHighlighting().collapseAll();
+
+                    // Highlight the clicked node
+                    chart.setUpToTheRootHighlighted(d.data.id).render().fit();
+                })
                 .render();
+
+            // Populate datalist with Office Name suggestions
+            const suggestionsList = document.getElementById('suggestions');
+            data.forEach((item) => {
+                const option = document.createElement('option');
+                option.value = item.Office_name;
+                suggestionsList.appendChild(option);
+            });
 
             // Automatically expand and center the node with ID '56'
             expandNode('56');
