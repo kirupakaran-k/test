@@ -9,16 +9,9 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-org-chart@3.1.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
     <style>
-        /* Add any custom styles here */
-        .chart-container {
-            /* Specify container styles if needed */
-            text-align: center;
-            margin: 1vw;
-        }
-        h1, h2, hr, p {text-align: center;
-            margin-left: 2vw; /* Adjust the value as needed */
-            margin-right: 2vw; /* Adjust the value as needed */
-        }	
+        .chart-container {margin: 1vw;}
+		.link {stroke: #666699; stroke-width: 2px;}
+        h1, h2, hr, p {text-align: center; margin-left: 2vw; margin-right: 2vw;}	
     </style>
 </head>
 <body>
@@ -43,12 +36,12 @@
             'https://docs.google.com/spreadsheets/d/e/2PACX-1vSdRqAAC6DtZrVXHHxHA0VH6CUT8xszgO8kkE1IZuZx18SN2-oyNBADM4C2iWkDjIeHDcBHrPQoNExU/pub?gid=412639955&single=true&output=csv'
         ).then((data) => {
             chart = new d3.OrgChart()
-                .nodeHeight((d) => {
+                .nodeHeight((d) => 100)
+                .nodeWidth((d) => {
                     const linesOccupied = d.data.Officer.length + d.data.Office_name.length + d.data.Location.length;
-                    const baseHeight = 44; 
-                    const lineHeight = 1.14; 
+                    const baseHeight = 90; 
+                    const lineHeight = 2.4; 
                     return baseHeight + linesOccupied * lineHeight;})
-                .nodeWidth((d) => 220)
                 .childrenMargin((d) => 60)
                 .layout('left')
                 .compact(false)
