@@ -9,6 +9,10 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-org-chart@3.1.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
     <style>
+    	.html, body {
+   			height: 90vh;
+   			overflow: hidden ;
+        }
         .chart-container {margin: 1vw;}
 		.link {stroke: #666699; stroke-width: 2px;}
         h1, h2, hr, p {text-align: center; margin-left: 2vw; margin-right: 2vw;}	
@@ -16,11 +20,11 @@
 </head>
 <body>
     <!-- Heading -->
-    <h1 style= "font-size: 3.6vw;">TAMILNADU WATER RESOURCES DEPARTMENT</h1>
+    <h1 style= "font-size: clamp(18px, 3.6vw, 28px)">TAMILNADU WATER RESOURCES DEPARTMENT</h1>
     <hr style="border: 1px solid #a3a3c2;">
-    <p style= "font-size: 2vw;"><b><u>ORGANOGRAM</u></b><span style="font-size: 1.5vw;"> [Definition: A visual representation of an organization's structure, illustrating hierarchy and relationships.]</span></p>
+    <p style= "font-size: clamp(14px, 2.6vw, 20px);"><b><u>ORGANOGRAM</u></b><span style="font-size: clamp(12px, 1.4vw, 14px);"> [Definition: A visual representation of an organization's structure, illustrating hierarchy and relationships.]</span></p>
     <hr style="border: 1px solid #a3a3c2;">
-    <h2 style= "font-size: 3vw;">COIMBATORE REGION</h2>
+    <h2 style= "font-size: clamp(16px, 3vw, 24px);">COIMBATORE REGION</h2>
 
     <div class="chart-container"></div>
 
@@ -29,9 +33,7 @@
 
         // Function to expand and center the node
         function expandNode(nodeId) {
-            chart.setExpanded(nodeId).setCentered(nodeId).render();
-            
-        }
+            chart.setExpanded(nodeId).setCentered(nodeId).render();}
         d3.csv(
             'https://docs.google.com/spreadsheets/d/e/2PACX-1vSdRqAAC6DtZrVXHHxHA0VH6CUT8xszgO8kkE1IZuZx18SN2-oyNBADM4C2iWkDjIeHDcBHrPQoNExU/pub?gid=412639955&single=true&output=csv'
         ).then((data) => {
