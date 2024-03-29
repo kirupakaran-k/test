@@ -11,19 +11,23 @@
     <style>
         /* Add any custom styles here */
         .chart-container {
-   		border: 1px solid #ccc;
-    	margin: 20px;
-    	margin-bottom: 50px;}
-
+            /* Specify container styles if needed */
+            text-align: center;
+            margin: 1vw;
+        }
+        h1, h2, hr, p {text-align: center;
+            margin-left: 2vw; /* Adjust the value as needed */
+            margin-right: 2vw; /* Adjust the value as needed */
+        }	
     </style>
 </head>
 <body>
     <!-- Heading -->
-    <h1 style="text-align: center; margin-left: 2.5%; margin-right: 2.5%;font-size: 200%;">TAMILNADU WATER RESOURCES DEPARTMENT</h1>
-    <hr style="border: 1px solid #a3a3c2; margin-left: 2.5%; margin-right: 2.5%;">
-    <p style="text-align: center; margin-left: 2.5%; margin-right: 2.5%;"><b><u><span style="font-style: underline;font-size: 100%;">ORGANOGRAM</span></b></u><span style="font-size: 80%;">    [Definition: A visual representation of an organization's structure, illustrating hierarchy and relationships.]</span></p>
-    <hr style="border: 1px solid #a3a3c2; margin-left: 2.5%; margin-right: 2.5%;">
-    <h2 style="text-align: center; margin-left: 2.5%; margin-right: 2.5%; font-size: 140%;">COIMBATORE REGION</h2>
+    <h1 style= "font-size: 3.6vw;">TAMILNADU WATER RESOURCES DEPARTMENT</h1>
+    <hr style="border: 1px solid #a3a3c2;">
+    <p style= "font-size: 2vw;"><b><u>ORGANOGRAM</u></b><span style="font-size: 1.5vw;"> [Definition: A visual representation of an organization's structure, illustrating hierarchy and relationships.]</span></p>
+    <hr style="border: 1px solid #a3a3c2;">
+    <h2 style= "font-size: 3vw;">COIMBATORE REGION</h2>
 
     <div class="chart-container"></div>
 
@@ -32,8 +36,8 @@
 
         // Function to expand and center the node
         function expandNode(nodeId) {
-            chart.setExpanded(nodeId).render();
-            chart.fit().render();
+            chart.setExpanded(nodeId).setCentered(nodeId).render();
+            
         }
         d3.csv(
             'https://docs.google.com/spreadsheets/d/e/2PACX-1vSdRqAAC6DtZrVXHHxHA0VH6CUT8xszgO8kkE1IZuZx18SN2-oyNBADM4C2iWkDjIeHDcBHrPQoNExU/pub?gid=412639955&single=true&output=csv'
