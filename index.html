@@ -11,17 +11,19 @@
     <style>
         /* Add any custom styles here */
         .chart-container {
-            /* Specify container styles if needed */
-        }
+   		border: 1px solid #ccc;
+    	margin: 20px;
+    	margin-bottom: 50px;}
+
     </style>
 </head>
 <body>
     <!-- Heading -->
-    <h1 style="text-align: center; margin-left: 20px; margin-right: 20px;">TAMILNADU WATER RESOURCES DEPARTMENT</h1>
-    <hr style="border: 1px solid #a3a3c2; margin-left: 20px; margin-right: 20px;">
-    <p style="text-align: center; margin-left: 20px; margin-right: 20px;"><b><u><span style="font-style: underline;">ORGANOGRAM</span></b></u><span style="font-size: 14px;">    [Definition: A visual representation of an organization's structure, illustrating hierarchy and relationships.]</span></p>
-    <hr style="border: 1px solid #a3a3c2; margin-left: 20px; margin-right: 20px;">
-    <h2 style="text-align: center; margin-left: 20px; margin-right: 20px;">COIMBATORE REGION</h2>
+    <h1 style="text-align: center; margin-left: 2.5%; margin-right: 2.5%;font-size: 200%;">TAMILNADU WATER RESOURCES DEPARTMENT</h1>
+    <hr style="border: 1px solid #a3a3c2; margin-left: 2.5%; margin-right: 2.5%;">
+    <p style="text-align: center; margin-left: 2.5%; margin-right: 2.5%;"><b><u><span style="font-style: underline;font-size: 100%;">ORGANOGRAM</span></b></u><span style="font-size: 80%;">    [Definition: A visual representation of an organization's structure, illustrating hierarchy and relationships.]</span></p>
+    <hr style="border: 1px solid #a3a3c2; margin-left: 2.5%; margin-right: 2.5%;">
+    <h2 style="text-align: center; margin-left: 2.5%; margin-right: 2.5%; font-size: 140%;">COIMBATORE REGION</h2>
 
     <div class="chart-container"></div>
 
@@ -31,34 +33,26 @@
         // Function to expand and center the node
         function expandNode(nodeId) {
             chart.setExpanded(nodeId).render();
-        }
-        function Center() {
             chart.fit().render();
         }
-
-        // Fetch CSV data and render chart
         d3.csv(
             'https://docs.google.com/spreadsheets/d/e/2PACX-1vSdRqAAC6DtZrVXHHxHA0VH6CUT8xszgO8kkE1IZuZx18SN2-oyNBADM4C2iWkDjIeHDcBHrPQoNExU/pub?gid=412639955&single=true&output=csv'
         ).then((data) => {
             chart = new d3.OrgChart()
                 .nodeHeight((d) => {
-                    // Calculate the total number of lines for Officer, Office_name, and Location
                     const linesOccupied = d.data.Officer.length + d.data.Office_name.length + d.data.Location.length;
-                    // Set a base height and adjust based on the number of lines
-                    const baseHeight = 40; // Base height for the node
-                    const lineHeight = 1.14; // Height of each line
-                    return baseHeight + linesOccupied * lineHeight;
-                }) // Adjust node height dynamically based on 'Height' property
+                    const baseHeight = 44; 
+                    const lineHeight = 1.14; 
+                    return baseHeight + linesOccupied * lineHeight;})
                 .nodeWidth((d) => 220)
                 .childrenMargin((d) => 60)
                 .layout('left')
                 .compact(false)
                 .nodeContent(function (d, i, arr, state) {
-                    // Define color based on the 'Officer_rank' attribute
-                    let color = '#008080'; // Default color
+                    let color = '#008080'; 
                     switch (d.data.Officer_rank) {
                         case '1':
-                            color = '#47a6ff'; // Change color based on the 'rank' value
+                            color = '#47a6ff'; 
                             break;
                         case '2':
                             color = '#69b9ff'; // Change color based on the 'rank' value
@@ -95,7 +89,6 @@
 
             // Automatically expand and center the node with ID '56'
             expandNode('56');
-            Center();
         });
     </script>
 </body>
