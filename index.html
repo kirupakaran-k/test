@@ -38,7 +38,7 @@
             'https://docs.google.com/spreadsheets/d/e/2PACX-1vSdRqAAC6DtZrVXHHxHA0VH6CUT8xszgO8kkE1IZuZx18SN2-oyNBADM4C2iWkDjIeHDcBHrPQoNExU/pub?gid=412639955&single=true&output=csv'
         ).then((data) => {
             chart = new d3.OrgChart()
-                .nodeHeight((d) => 100)
+                .nodeHeight((d) => 110)
                 .nodeWidth((d) => {
                     const linesOccupied = d.data.Officer.length + d.data.Office_name.length + d.data.Location.length;
                     const baseHeight = 90; 
