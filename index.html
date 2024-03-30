@@ -14,60 +14,41 @@
    			overflow: hidden ;
         }
         .chart-container {margin: 1vw;}
-		.link {stroke-width: 4px;}
+		    .link {stroke-width: 4px;}
         h1, h2, hr, p {text-align: center; margin-left: 2vw; margin-right: 2vw;}	
     </style>
 </head>
 <body>
     <!-- Heading -->
-    <h1 style= "font-size: clamp(18px, 3.6vw, 28px)">ORGANOGRAM - TAMILNADU WATER RESOURCES DEPARTMENT</h1>
-    <hr style="border: 1px solid #a3a3c2; margin-top: -1vh; margin-bottom: -2vh;">
-    <p style= "font-size: clamp(12px, 1.4vw, 14px);"><i> [Definition: A visual representation of an organization's structure, illustrating hierarchy and relationships.]</i></p>
-    <hr style="border: 1px solid #a3a3c2; margin-top: -2vh; margin-bottom: -1vh;">
+    <h1 style= "font-size: clamp(18px, 3.6vw, 28px)">TAMILNADU WATER RESOURCES DEPARTMENT</h1>
+    <hr style="border: 1px solid #a3a3c2; margin-top: -1vh; margin-bottom: max(-10px, -2vh);">
+    <p style= "font-size: clamp(14px, 2.6vw, 20px);"><b>ORGANOGRAM</b><span style="font-size: clamp(12px, 1.4vw, 14px);"><i> [Definition: A visual representation of an organization's structure, illustrating hierarchy and relationships.]</i></span></p>
+    <hr style="border: 1px solid #a3a3c2; margin-top: max(-10px, -2vh); margin-bottom: -1vh;">
     <h2 style= "font-size: clamp(16px, 3vw, 24px);">COIMBATORE REGION</h2>
     
-    <input type="search" id="searchInput" list="suggestions" placeholder="search by Office Name"/>
-    <datalist id="suggestions"></datalist>
-    <button onclick="filterChart()">Search</button>
+<input type="search" id="searchInput" list="suggestions" placeholder="search by Id"/>
+<datalist id="suggestions"></datalist>
+<button onclick="filterChart()">Search</button>
     
-    <div class="chart-container"></div>
+  <div class="chart-container"></div>
 
-    <script>
-        let chart;
+  <script>
+    let chart;
 
-        function filterChart() {
-            // Get input value
-            const officeName = document.getElementById('searchInput').value.trim().toLowerCase();
+  	function filterChart() {
+    		// Get input value
+    	const value = document.getElementById('searchInput').value;
 
-            // Find the node ID corresponding to the entered office name
-            const nodeId = findNodeIdByOfficeName(officeName);
+    		// Clear previous highlighting
+    	chart.clearHighlighting().collapseAll();
 
-            if (nodeId) {
-                // Clear previous highlighting
-                chart.clearHighlighting().collapseAll();
-
-                // Highlight the node
-                chart.setUpToTheRootHighlighted(nodeId).render().fit();
-            } else {
-                alert('Office Name not found!');
-            }
-        }
-
-        function findNodeIdByOfficeName(officeName) {
-            const data = chart.data();
-            for (const node of data) {
-                if (node.data.Office_name.toLowerCase() === officeName) {
-                    return node.data.id;
-                }
-            }
-            return null;
-        }
+    		// Highlight the searched node
+    	chart.setUpToTheRootHighlighted(value).render().fit();
+  		}
 
         // Function to expand and center the node
-        function expandNode(nodeId) {
-            chart.setExpanded(nodeId).setCentered(nodeId).render();
-        }
-
+    function expandNode(nodeId) {
+      chart.setExpanded(nodeId).setCentered(nodeId).render();}
         d3.csv(
             'https://docs.google.com/spreadsheets/d/e/2PACX-1vSdRqAAC6DtZrVXHHxHA0VH6CUT8xszgO8kkE1IZuZx18SN2-oyNBADM4C2iWkDjIeHDcBHrPQoNExU/pub?gid=412639955&single=true&output=csv'
         ).then((data) => {
@@ -77,8 +58,7 @@
                     const linesOccupied = d.data.Officer.length + d.data.Office_name.length + d.data.Location.length;
                     const baseHeight = 100; 
                     const lineHeight = 2.4; 
-                    return baseHeight + linesOccupied * lineHeight;
-                })
+                    return baseHeight + linesOccupied * lineHeight;})
                 .childrenMargin((d) => 60)
                 .layout('left')
                 .compact(false)
@@ -89,22 +69,22 @@
                             color = '#47a6ff'; 
                             break;
                         case '2':
-                            color = '#69b9ff';
+                            color = '#69b9ff'; // Change color based on the 'rank' value
                             break;
                         case '3':
-                            color = '#88c8ff';
+                            color = '#88c8ff'; // Change color based on the 'rank' value
                             break;
                         case '4':
-                            color = '#9cd4ff';
+                            color = '#9cd4ff'; // Change color based on the 'rank' value
                             break;
                         case '5':
-                            color = '#b5e1ff';
+                            color = '#b5e1ff'; // Change color based on the 'rank' value
                             break;
                         case '6':
-                            color = '#dff0ff';
+                            color = '#dff0ff'; // Change color based on the 'rank' value
                             break;
                         default:
-                            color = '#008080';
+                            color = '#008080'; // Default color
                     }
                     return `
                         <div style='width:${d.width}px;height:${d.height}px;padding-top:1px;padding-left:1px;padding-right:1px'>
@@ -119,23 +99,24 @@
                 })
                 .container('.chart-container')
                 .data(data)
+                
                 .onNodeClick((d) => {
-                    // Clear previous highlighting
-                    chart.clearHighlighting().collapseAll();
+        			  // Clear previous highlighting
+        			  chart.clearHighlighting().collapseAll();
 
-                    // Highlight the clicked node
-                    chart.setUpToTheRootHighlighted(d.data.id).render().fit();
-                })
-                .render();
-
-            // Populate datalist with Office Name suggestions
-            const suggestionsList = document.getElementById('suggestions');
-            data.forEach((item) => {
-                const option = document.createElement('option');
-                option.value = item.Address;
-                suggestionsList.appendChild(option);
-            });
-
+        			  // Highlight the clicked node
+        			  chart.setUpToTheRootHighlighted(d.data.id).render().fit();
+      			  })
+                
+              .render();
+                
+				// Populate datalist with ID suggestions
+    			const suggestionsList = document.getElementById('suggestions');
+    			data.forEach((item) => {
+      			const option = document.createElement('option');
+      			option.value = item.id;
+      			suggestionsList.appendChild(option);});
+                
             // Automatically expand and center the node with ID '56'
             expandNode('56');
         });
